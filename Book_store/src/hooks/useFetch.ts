@@ -4,7 +4,7 @@ import type { Book, BookApiResponse } from "../types/bookType";
 
 function useFetch(url: string) {
   const [books, setBooks] = useState<Book[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState<Boolean>(true);
   const [skeletonCount, setSkeletonCount] = useState(20);
 
   const fetchData = async () => {
