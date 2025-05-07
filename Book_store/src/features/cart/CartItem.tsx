@@ -1,38 +1,51 @@
 import { FaOpencart } from "react-icons/fa6";
+import { useSelector } from "react-redux";
+import type { RootState } from "../../store/store";
 const Cart = () => {
+  const cartItem = useSelector((state: RootState) => state.cart.items);
+  console.log(cartItem);
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-white via-teal-50 to-teal-100 p-6">
       <div className="max-w-5xl mx-auto bg-white shadow-2xl rounded-3xl p-8">
         <h1 className="flex items-center justify-center gap-3 text-4xl font-bold text-teal-700 mb-8">
-        <span>Shopping Cart</span>
+          <span>Shopping Cart</span>
           <FaOpencart className="text-5xl text-teal-600" />
         </h1>
 
         <div className="space-y-6">
-          {[1, 2, 3].map((_, index) => (
+          {cartItem.map((item, index) => (
             <div
               key={index}
               className="flex flex-col sm:flex-row items-center sm:justify-between bg-teal-50 rounded-xl p-4 shadow-sm"
             >
               <div className="flex items-center gap-4 w-full sm:w-auto">
                 <img
-                  src="https://via.placeholder.com/80"
-                  alt="Product"
+                  src={item.image}
+                  alt={item.title}
                   className="w-20 h-20 object-cover rounded-xl"
                 />
                 <div>
-                  <h2 className="text-lg font-semibold text-teal-800">Product Name</h2>
-                  <p className="text-sm text-teal-600">₹999.00</p>
+                  <h2 className="text-lg font-semibold text-teal-800">
+                    {item.title}
+                  </h2>
+                  <p className="text-sm text-teal-600">{item.price}</p>
                 </div>
               </div>
 
               <div className="flex items-center justify-between sm:justify-end gap-4 w-full sm:w-auto mt-4 sm:mt-0">
                 <div className="flex items-center gap-2">
-                  <button className="bg-teal-200 text-teal-800 px-3 py-1 rounded-full">−</button>
+                  <button className="bg-teal-200 text-teal-800 px-3 py-1 rounded-full">
+                    −
+                  </button>
                   <span className="text-teal-800 font-medium">1</span>
-                  <button className="bg-teal-200 text-teal-800 px-3 py-1 rounded-full">+</button>
+                  <button className="bg-teal-200 text-teal-800 px-3 py-1 rounded-full">
+                    +
+                  </button>
                 </div>
-                <button className="text-red-500 hover:underline text-sm">Remove</button>
+                <button className="text-red-500 hover:underline text-sm">
+                  Remove
+                </button>
               </div>
             </div>
           ))}
@@ -42,7 +55,9 @@ const Cart = () => {
 
         <div className="grid md:grid-cols-2 gap-6">
           <div className="bg-white border border-teal-200 rounded-xl p-6 shadow-sm">
-            <h3 className="text-xl font-semibold text-teal-700 mb-2">Apply Promo Code</h3>
+            <h3 className="text-xl font-semibold text-teal-700 mb-2">
+              Apply Promo Code
+            </h3>
             <input
               type="text"
               placeholder="Enter code"
@@ -54,7 +69,9 @@ const Cart = () => {
           </div>
 
           <div className="bg-white border border-teal-200 rounded-xl p-6 shadow-sm">
-            <h3 className="text-xl font-semibold text-teal-700 mb-4">Order Summary</h3>
+            <h3 className="text-xl font-semibold text-teal-700 mb-4">
+              Order Summary
+            </h3>
             <div className="space-y-2 text-teal-800">
               <div className="flex justify-between">
                 <span>Subtotal</span>
