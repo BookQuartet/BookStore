@@ -6,6 +6,8 @@ import Login from "../components/login/Login";
 import Cart from "../features/cart/CartItem";
 import BookList from "../features/book/BookList";
 import Register from "../components/login/Register";
+import BookDetails from "../features/book/BookDetails";
+import FreeBookHome from "../features/book/FreeBookHome";
 const AppRouter = () => {
   return (
     <div>
@@ -18,6 +20,8 @@ const AppRouter = () => {
           <Route path="/register" element={<Register />} />
           <Route path="/cartItem" element={<Cart />} />
           <Route path="/booklist" element={<BookList />} />
+          <Route path="/book-details/:isbn13" element={<BookDetails/>}/>
+          <Route path="/home-freebook" element={<FreeBookHome/>}/>
         </Routes>
       </BrowserRouter>
     </div>
