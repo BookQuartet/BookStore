@@ -1,15 +1,17 @@
 import { useEffect, useState } from 'react'
 // import useFetch from '../../hooks/useFetch'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import axios from 'axios'
 import type { BookDetails } from '../../types/bookType'
 import "../../styles/BookDetails.css"
+import NavBar from '../../components/common/NavBar'
 // import { object } from 'framer-motion/client'
 
 export default function BookDetails() {
     const [data,setData]=useState<BookDetails | null>(null)
     const [loading,setLoading]=useState<boolean>(false)
     const {isbn13}=useParams()
+    const navigate = useNavigate();
 
    
     useEffect(()=>{
@@ -35,6 +37,7 @@ export default function BookDetails() {
 
   return (
     <div className='min-h-screen flex justify-center items-center'>
+      <NavBar/>
         {loading ? 
         <div>
             Loading
@@ -134,8 +137,7 @@ export default function BookDetails() {
 
       <div className='flex justify-end w-full  pb-1'>
         <div className='flex items-center gap-4'>
-        <button className='border border-gray rounded-lg px-3 py-1 font-semibold text-md bg-green-500 hover:bg-green-800 shadow-lg'><i className="fa-solid fa-arrow-left text-center  rounded-lg bg-white text-black mr-2"></i>Home </button>
-        <button className='border border-gray rounded-lg px-3 py-1 font-semibold text-md bg-blue-500 hover:bg-blue-800 shadow-lg'> Buy <i className="fa-solid fa-arrow-right text-center  rounded-lg bg-white text-black ml-1"></i></button>
+        <button onClick={()=>navigate(-1)} className='border border-gray rounded-lg px-3 py-1 font-semibold text-md bg-green-500 hover:bg-green-800 shadow-lg'><i className="fa-solid fa-arrow-left text-center  rounded-lg bg-white text-black mr-2"></i>Back </button>
         </div>
       </div>
 

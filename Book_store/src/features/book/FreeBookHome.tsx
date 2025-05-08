@@ -1,6 +1,7 @@
 import useFetch from '../../hooks/useFetch'
 import { useNavigate } from 'react-router-dom'
 import {motion} from "framer-motion"
+import NavBar from '../../components/common/NavBar'
 
 export default function FreeBookHome() {
   const navigate = useNavigate()
@@ -26,7 +27,8 @@ export default function FreeBookHome() {
 
   return (
     <div className='min-h-screen flex flex-wrap justify-center gap-6 px-8 py-6 bg-gray-100'>
-      <h1 className='text-xl font-bold font-serif bg-gray-500 text-white rounded-lg px-2 shadow-lg'>Free Books Choose Any You Like !! and Enjoy</h1>
+      <NavBar/>
+      <h1 className='text-xl font-bold font-serif bg-gray-500 text-white rounded-lg px-2 shadow-lg mt-[80px]'>Free Books Choose Any You Like !! and Enjoy</h1>
       <motion.div layout className='flex flex-wrap justify-between items-center gap-3'>
 
           {isLoading ? 

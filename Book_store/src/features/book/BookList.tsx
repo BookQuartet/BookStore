@@ -5,6 +5,7 @@ import useFetch from "../../hooks/useFetch";
 import { motion } from "framer-motion";
 import NavBar from "../../components/common/NavBar";
 import Footer from "../../components/common/Footer";
+import { useNavigate } from "react-router";
 
 interface Book {
   title: string;
@@ -87,6 +88,7 @@ const convertToINR = (usdString: string): string => {
   return `₹ ${Math.round(numericValue * 85).toLocaleString("en-IN")}`;
 };
 const BookList: React.FC = () => {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const [query, setQuery] = useState<string>("programming");
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
@@ -240,10 +242,10 @@ const BookList: React.FC = () => {
                         Add to Cart
                       </button>
                       <a
-                        href={book.url}
+                        onClick={() => navigate(`/book-details/${book.isbn13}`)}
                         target="_blank"
                         rel="noreferrer"
-                        className="bg-orange-500 text-white px-2 py-1 rounded text-sm"
+                        className="bg-orange-500 text-white px-2 py-1 rounded text-sm cursor-pointer"
                       >
                         View
                       </a>
@@ -253,7 +255,6 @@ const BookList: React.FC = () => {
           </motion.div>
         </main>
       </div>
-      <Footer/>
     </>
   );
 };

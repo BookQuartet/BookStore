@@ -48,7 +48,7 @@ const NavBar = () => {
 
         <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center space-x-4">
           <Link
-            to="/"
+            to="/home"
             className="flex items-center rounded-md px-3 py-2 text-sm font-medium text-white"
           >
             Home <FaHome className="ml-2 mt-1 text-blue-500" />
@@ -102,14 +102,14 @@ const NavBar = () => {
           <div className="relative">
             {userEmail ? (
               <div
-                className="h-8 w-8 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold cursor-pointer mr-2"
+                className="h-8 w-8 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold cursor-pointer mr-4"
                 onClick={() => setShowDropdown((prev) => !prev)}
               >
                 {getFirstLetter(userEmail)}
               </div>
             ) : (
               <img
-                className="h-8 w-8 rounded-full cursor-pointer"
+                className="h-8 w-8 rounded-full cursor-pointer "
                 src="https://images.unsplash.com/photo-1524995997946-a1c2e315a42f"
                 alt="User Avatar"
               />

@@ -10,17 +10,28 @@ import {
 import NavBar from "../../components/common/NavBar";
 import Footer from "../../components/common/Footer";
 import { useState } from "react";
+import { toast } from "react-toastify";
+import confetti from "canvas-confetti";
+type PromoCode = {
+  type: "percentage" | "fixed";
+  value: number;
+};
 
 const Cart = () => {
   const [isOrdered, setIsOrdered] = useState<boolean>(false);
+  const [promoCode, setPromoCode] = useState<string>("");
+  const [discount, setDiscount] = useState(0);
+  const [isPromoClicked, setIsPromoClicked] = useState<boolean>(false);
+
   const dispatch = useDispatch();
   const cartItem = useSelector((state: RootState) => state.cart.items);
-  console.log(cartItem);
+  const cartLength = cartItem.length;
   const cartTotal: number = cartItem.reduce(
     (acc, item) =>
       acc + Number(item.price.replace(/[^\d.]/g, "")) * item.quantity,
     0
   );
+  const discountAmount = discount;
   const decreaseCartQuantity = (item: any) => {
     dispatch(decreaseQuantity(item));
   };
@@ -29,6 +40,34 @@ const Cart = () => {
     dispatch(increaseQuantity(item));
   };
   const conversionRate = 83;
+  const validPromoCodes: Record<string, PromoCode> = {
+    SAVE10: { type: "percentage", value: 10 },
+    FLAT100: { type: "fixed", value: 100 },
+  };
+  const handleApplyPromo = () => {
+    const code = promoCode.toUpperCase();
+    if (validPromoCodes[code]) {
+      const { type, value } = validPromoCodes[code];
+
+      if (type === "percentage") {
+        const discountAmount = (cartTotal * conversionRate * value) / 100;
+        setDiscount(discountAmount);
+      } else if (type === "fixed") {
+        setDiscount(value);
+      }
+      toast.success("Promo code applied successfully ✅");
+      confetti({
+        particleCount: 500,
+        spread: 100,
+        origin: { y: 0.7 },
+      });
+      setIsPromoClicked(true);
+    } else {
+      setDiscount(0);
+      toast.error("Invalid promo code ❌");
+    }
+  };
+  console.log("discount", discount);
   return (
     <>
       <NavBar />
@@ -99,7 +138,7 @@ const Cart = () => {
 
           <div className="border-t border-teal-200 my-8"></div>
 
-          {!isOrdered ? (
+          {!isOrdered && cartLength > 0 ? (
             <div className="grid md:grid-cols-2 gap-6">
               <div className="bg-white border border-teal-200 rounded-xl p-6 shadow-sm">
                 <h3 className="text-xl font-semibold text-teal-700 mb-2">
@@ -107,10 +146,26 @@ const Cart = () => {
                 </h3>
                 <input
                   type="text"
+                  value={promoCode}
+                  onChange={(e) => {
+                    setPromoCode(e.target.value);
+                  }}
                   placeholder="Enter code"
                   className="w-full p-3 rounded-lg border border-teal-300 focus:outline-none"
                 />
-                <button className="mt-4 w-full bg-teal-500 text-white py-2 rounded-lg hover:bg-teal-600 transition">
+                <span>
+                  {isPromoClicked ? (
+                    <span className="text-green-400 text-sm m-2">
+                      Promo Code Applied Successfully ❤️‍🔥
+                    </span>
+                  ) : (
+                    ""
+                  )}
+                </span>
+                <button
+                  onClick={handleApplyPromo}
+                  className="mt-4 w-full bg-teal-500 text-white py-2 rounded-lg hover:bg-teal-600 transition"
+                >
                   Apply
                 </button>
               </div>
@@ -130,10 +185,17 @@ const Cart = () => {
                     <span>Shipping</span>
                     <span>₹50.00</span>
                   </div>
+                  <div className="flex justify-between">
+                    <span>Promo Code</span>
+                    <span> ₹{Math.round(discount).toFixed(2)}</span>
+                  </div>
                   <div className="flex justify-between font-bold text-lg mt-2">
                     <span>Total</span>
                     <span>
-                      ₹{Math.round(cartTotal * conversionRate + 50).toFixed(2)}
+                      ₹
+                      {Math.round(
+                        cartTotal * conversionRate + 50 - discountAmount
+                      ).toFixed(2)}
                     </span>
                   </div>
                 </div>
@@ -149,13 +211,16 @@ const Cart = () => {
               </div>
             </div>
           ) : (
-            <div className="text-center mt-10 text-2xl font-semibold text-green-600">
-              🎉 Order Successful!
+            <div className="text-center mt-10 text-2xl font-semibold text-ellipsis-green-600">
+              {isOrdered && cartLength > 0 ? (
+                "Order Successfull"
+              ) : (
+                <span className="text-green-400">Thanks for Shopping 😊</span>
+              )}
             </div>
           )}
         </div>
       </div>
-      <Footer />
     </>
   );
 };
