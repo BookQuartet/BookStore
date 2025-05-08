@@ -5,7 +5,6 @@ import Contact from "../pages/Contact";
 import Login from "../components/login/Login";
 import Cart from "../features/cart/CartItem";
 import BookList from "../features/book/BookList";
-// import Footer from "../components/common/Footer";
 import Register from "../components/login/Register";
 import BookDetails from "../features/book/BookDetails";
 import FreeBookHome from "../features/book/FreeBookHome";
