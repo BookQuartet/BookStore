@@ -2,6 +2,7 @@ import useFetch from '../../hooks/useFetch'
 import { useNavigate } from 'react-router-dom'
 import {motion} from "framer-motion"
 import NavBar from '../../components/common/NavBar'
+import HomeSlidding from '../../components/home/HomeSlidding'
 
 export default function FreeBookHome() {
   const navigate = useNavigate()
@@ -26,9 +27,14 @@ export default function FreeBookHome() {
   }
 
   return (
-    <div className='min-h-screen flex flex-wrap justify-center gap-6 px-8 py-6 bg-gray-100'>
+    <div className='min-h-screen  bg-white '>
+      
       <NavBar/>
-      <h1 className='text-xl font-bold font-serif bg-gray-500 text-white rounded-lg px-2 shadow-lg mt-[80px]'>Free Books Choose Any You Like !! and Enjoy</h1>
+
+        <div className='px-8  mt-24'>
+        <HomeSlidding />
+        </div>
+      <h1 className='text-xl font-bold font-serif bg-gray-500 text-white rounded-lg px-2 shadow-lg my-[30px] text-center'>Free Books - Choose Any You Like !! and Enjoy</h1>
       <motion.div layout className='flex flex-wrap justify-between items-center gap-3'>
 
           {isLoading ? 
@@ -40,7 +46,7 @@ export default function FreeBookHome() {
         books.map((item) => (
           <motion.div layout layoutId={item.isbn13} whileHover={{scale:1.03}} initial={{opacity:0,scale:0.9}} animate={{opacity:1,scale:1}} exit={{opacity:0,scale:0.9}}
             transition={{duration:0.3,type:"spring",stiffness:100}}       key={item.isbn13}
-            className='w-[22%] min-h-[500px] flex flex-col border border-gray-300 rounded-lg shadow bg-white hover:translate-y-1 transition-transform duration-300'
+            className='w-[22%] min-h-[500px] flex flex-col border border-gray-300 rounded-lg shadow  mx-4 bg-white hover:translate-y-1 transition-transform duration-300'
           >
             <h3 className='font-semibold text-base bg-yellow-300 text-gray-900 text-center px-2 py-3 rounded-t-lg'>
               {item.title}
