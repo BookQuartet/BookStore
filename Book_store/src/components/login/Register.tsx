@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import bgBook from "../../assets/bg.jpg";
+import { toast } from "react-toastify";
 const Register: React.FC = () => {
   const [username, setUsername] = useState<string>("");
   const [email, setEmail] = useState<string>("");
@@ -18,7 +19,8 @@ const Register: React.FC = () => {
     localStorage.setItem("username", username);
     localStorage.setItem("userEmail", email);
     localStorage.setItem("userPassword", password);
-    navigate("/login");
+    toast.success("Successfully Registered");
+    navigate("/");
   };
   return (
     <div
@@ -106,7 +108,9 @@ const Register: React.FC = () => {
             <h3 className="text-lg font-semibold text-red-600 mb-4">
               Registration Failed
             </h3>
-            <p className="text-gray-700">Passwords do not match. Please try again.</p>
+            <p className="text-gray-700">
+              Passwords do not match. Please try again.
+            </p>
             <button
               onClick={() => setShowModal(false)}
               className="mt-6 w-full bg-red-600 text-white py-2 rounded hover:bg-red-500 transition"

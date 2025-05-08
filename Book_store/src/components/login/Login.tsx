@@ -1,13 +1,16 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import bookImage from "../../assets/bg2.webp";
 import bgBook from "../../assets/bg.jpg";
+import { toast } from "react-toastify";
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [showModal, setShowModal] = useState<boolean>(false);
+  const [storedUsername, setStoredUsername] = useState<string>("");
+
   const navigate = useNavigate();
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -16,11 +19,20 @@ const Login: React.FC = () => {
     const storedPassword = localStorage.getItem("userPassword");
     if (email === storedEmail && password === storedPassword) {
       localStorage.setItem("userEmail", email);
+      toast.success("Login Successfully ✅");
       navigate("/home");
     } else {
       setShowModal(true);
     }
   };
+  const location = useLocation();
+
+  useEffect(() => {
+    const savedUsername = localStorage.getItem("username");
+    if (savedUsername) {
+      setStoredUsername(savedUsername);
+    }
+  }, [location]);
 
   return (
     <div
@@ -57,42 +69,44 @@ const Login: React.FC = () => {
           <h2 className="text-white text-4xl font-bold text-center mb-8 drop-shadow">
             Welcome
           </h2>
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div>
-              <label className="block text-white mb-2">Email</label>
-              <input
-                type="email"
-                placeholder="example:name@example.com"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-4 py-3 rounded-lg bg-white/40 text-white placeholder-white focus:outline-none focus:ring-2 focus:ring-white"
-              />
-            </div>
-            <div>
-              <label className="block text-white mb-2">Password</label>
-              <input
-                type="password"
-                placeholder="*******"
-                required
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-4 py-3 rounded-lg bg-white/40 text-white placeholder-white focus:outline-none focus:ring-2 focus:ring-white"
-              />
-            </div>
-            <button
-              type="submit"
-              className="w-full bg-black/80 text-white font-semibold py-3 rounded-lg hover:bg-black/60 transition"
-            >
-              Login
-            </button>
-            <p className="text-white text-sm text-center mt-4">
-              Don't have an account?{" "}
-              <a href="/register" className="underline hover:text-gray-200">
-                Sign Up
-              </a>
-            </p>
-          </form>
+          {storedUsername && (
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div>
+                <label className="block text-white mb-2">Email</label>
+                <input
+                  type="email"
+                  placeholder="name@example.com"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="w-full px-4 py-3 rounded-lg bg-white/40 text-white placeholder-white focus:outline-none focus:ring-2 focus:ring-white"
+                />
+              </div>
+              <div>
+                <label className="block text-white mb-2">Password</label>
+                <input
+                  type="password"
+                  placeholder="*******"
+                  required
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full px-4 py-3 rounded-lg bg-white/40 text-white placeholder-white focus:outline-none focus:ring-2 focus:ring-white"
+                />
+              </div>
+              <button
+                type="submit"
+                className="w-full bg-black/80 text-white font-semibold py-3 rounded-lg hover:bg-black/60 transition"
+              >
+                Login
+              </button>
+            </form>
+          )}
+          <p className="text-white text-sm text-center mt-4">
+            Don't have an account?{" "}
+            <a href="/register" className="underline hover:text-gray-200">
+              Sign Up
+            </a>
+          </p>
         </motion.div>
       </motion.div>
 
@@ -107,7 +121,9 @@ const Login: React.FC = () => {
             <h3 className="text-lg font-semibold text-red-600 mb-4">
               Login Failed
             </h3>
-            <p className="text-gray-700">Invalid credentials. Please try again.</p>
+            <p className="text-gray-700">
+              Invalid credentials. Please try again.
+            </p>
             <button
               onClick={() => setShowModal(false)}
               className="mt-6 w-full bg-red-600 text-white py-2 rounded hover:bg-red-500 transition"

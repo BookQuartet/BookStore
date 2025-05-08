@@ -5,10 +5,10 @@ export interface Book {
     price: string;
     image: string;
     url: string;
-    books:[]
   }
   export interface Books{
     books: Book[]
+    price:string
   }
   
   export interface BookApiResponse {
