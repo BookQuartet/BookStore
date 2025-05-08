@@ -34,7 +34,7 @@ export default function BookDetails() {
     },[isbn13])
    
     console.log("data",data)
-
+    
   return (
     <div className='min-h-screen flex justify-center items-center'>
       <NavBar/>
