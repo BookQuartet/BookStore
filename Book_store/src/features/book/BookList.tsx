@@ -7,7 +7,6 @@ import NavBar from "../../components/common/NavBar";
 import { useNavigate } from "react-router";
 import type { BookCart } from "../../types/bookType";
 
-
 interface Category {
   name: string;
   keyword: string;
@@ -55,7 +54,6 @@ const categories: Category[] = [
     keyword: "java",
     icon: "https://s2.svgbox.net/files.svg?ic=java",
   },
-
   {
     name: "Android",
     keyword: "android",
@@ -67,6 +65,7 @@ const categories: Category[] = [
     icon: "https://s2.svgbox.net/files.svg?ic=angular",
   },
 ];
+
 const SkeletonBookCard = () => (
   <div className="w-[200px] shadow-2xl rounded p-3 m-2 animate-pulse">
     <div className="w-[100px] h-[130px] bg-gray-300 mb-2 mx-auto rounded" />
@@ -75,10 +74,12 @@ const SkeletonBookCard = () => (
     <div className="h-4 bg-gray-300 w-1/4 mx-auto rounded" />
   </div>
 );
+
 const convertToINR = (usdString: string): string => {
   const numericValue = parseFloat(usdString.replace(/[^0-9.]/g, ""));
   return `₹ ${Math.round(numericValue * 85).toLocaleString("en-IN")}`;
 };
+
 const BookList: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -94,6 +95,7 @@ const BookList: React.FC = () => {
     setSelectedCategory(cat.name);
     setQuery(cat.keyword || "programming");
   };
+
   const resetFilters = () => {
     setSelectedCategory("All");
     setQuery("programming");
@@ -111,9 +113,9 @@ const BookList: React.FC = () => {
             );
     const numericPrice = parseFloat(book.price.replace(/[^0-9.]/g, ""));
     const priceInINR = numericPrice * 85;
-
     return categoryMatch && priceInINR <= price;
   });
+
   const handleAddToCart = (book: BookCart) => {
     dispatch(
       addToCart({
@@ -144,7 +146,7 @@ const BookList: React.FC = () => {
               <img
                 className="absolute w-5 h-5 right-[83%] top-[155px]"
                 src="https://s2.svgbox.net/hero-outline.svg?ic=search"
-                alt=""
+                alt="search-icon"
               />
             </div>
             <h4 className="font-medium text-xl mb-3">Category</h4>
@@ -161,7 +163,7 @@ const BookList: React.FC = () => {
                 >
                   <div className="flex">
                     <img src={cat.icon} className="w-5 h-5 mr-2" alt="" />
-                    <span> {cat.name}</span>
+                    <span>{cat.name}</span>
                   </div>
                 </li>
               ))}
@@ -177,7 +179,6 @@ const BookList: React.FC = () => {
               onChange={(e) => setPrice(parseFloat(e.target.value))}
               className="w-full accent-blue-500"
             />
-
             <button
               className="w-full mt-4 border font-bold border-blue-500 text-black py-2 rounded-lg hover:bg-blue-500 hover:text-white transition"
               onClick={resetFilters}
@@ -192,58 +193,64 @@ const BookList: React.FC = () => {
             layout
             className="flex justify-between flex-wrap items-center gap-4"
           >
-            {isLoading
-              ? Array.from({ length: skeletonCount }, (_, i) => (
-                  <SkeletonBookCard key={i} />
-                ))
-              : filteredBooks.map((book) => (
-                  <motion.div
-                    key={book.isbn13}
-                    layout
-                    layoutId={book.isbn13}
-                    className="w-[200px] justify-center shadow-2xl rounded p-3 m-2 flex flex-col items-center bg-white"
-                    whileHover={{ scale: 1.03 }}
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.9 }}
-                    transition={{
-                      duration: 0.3,
-                      type: "spring",
-                      stiffness: 100,
-                    }}
-                  >
-                    <img
-                      src={book.image}
-                      alt={book.title}
-                      className="w-[100px] h-[130px] object-cover mb-2"
-                    />
-                    <h4 className="text-sm font-semibold text-center mb-1">
-                      {book.title}
-                    </h4>
-                    <p className="text-xs text-gray-500 text-center mb-1">
-                      {book.subtitle}
-                    </p>
-                    <p className="text-sm font-bold">
-                      {convertToINR(book.price)}
-                    </p>
-                    <div className="flex gap-3 mt-2">
-                      <button
-                        onClick={() => handleAddToCart(book)}
-                        className="bg-blue-500 text-white px-2 py-1 rounded text-sm"
-                      >
-                        Add to Cart
-                      </button>
-                      <a
-                        onClick={() => navigate(`/book-details/${book.isbn13}`)}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="bg-orange-500 text-white px-2 py-1 rounded text-sm cursor-pointer"
-                      >
-                        View
-                      </a>
-                    </div>
-                  </motion.div>
-                ))}
+            {query.trim() === "" ? (
+              <p className="text-gray-600 text-lg text-center w-full mt-10">
+                Please enter a search keyword to display books.
+              </p>
+            ) : isLoading ? (
+              Array.from({ length: skeletonCount }, (_, i) => (
+                <SkeletonBookCard key={i} />
+              ))
+            ) : filteredBooks.length === 0 ? (
+              <p className="text-gray-600 text-lg text-center w-full mt-10">
+                No books found for the selected filters.
+              </p>
+            ) : (
+              filteredBooks.map((book) => (
+                <motion.div
+                  key={book.isbn13}
+                  layout
+                  layoutId={book.isbn13}
+                  className="w-[200px] justify-center shadow-2xl rounded p-3 m-2 flex flex-col items-center bg-white"
+                  whileHover={{ scale: 1.03 }}
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.9 }}
+                  transition={{ duration: 0.3, type: "spring", stiffness: 100 }}
+                >
+                  <img
+                    src={book.image}
+                    alt={book.title}
+                    className="w-[100px] h-[130px] object-cover mb-2"
+                  />
+                  <h4 className="text-sm font-semibold text-center mb-1">
+                    {book.title}
+                  </h4>
+                  <p className="text-xs text-gray-500 text-center mb-1">
+                    {book.subtitle}
+                  </p>
+                  <p className="text-sm font-bold">
+                    {convertToINR(book.price)}
+                  </p>
+                  <div className="flex gap-3 mt-2">
+                    <button
+                      onClick={() => handleAddToCart(book)}
+                      className="bg-blue-500 text-white px-2 py-1 rounded text-sm"
+                    >
+                      Add to Cart
+                    </button>
+                    <a
+                      onClick={() => navigate(`/book-details/${book.isbn13}`)}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="bg-orange-500 text-white px-2 py-1 rounded text-sm cursor-pointer"
+                    >
+                      View
+                    </a>
+                  </div>
+                </motion.div>
+              ))
+            )}
           </motion.div>
         </main>
       </div>

@@ -3,7 +3,6 @@ import { useState } from "react";
 import javaImg from "../assets/java.jpg";
 import pythonImg from "../assets/python.jpg";
 import NavBar from "../components/common/NavBar";
-import Footer from "../components/common/Footer";
 
 const books = [
   {
