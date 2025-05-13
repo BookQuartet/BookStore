@@ -45,3 +45,8 @@ export interface Book {
     image: string;
     url: string;
   }
+  export type Category = {
+     name: string;
+  keyword: string;
+  icon: string;
+  }

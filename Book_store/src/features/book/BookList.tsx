@@ -5,13 +5,7 @@ import useFetch from "../../hooks/useFetch";
 import { motion } from "framer-motion";
 import NavBar from "../../components/common/NavBar";
 import { useNavigate } from "react-router";
-import type { BookCart } from "../../types/bookType";
-
-interface Category {
-  name: string;
-  keyword: string;
-  icon: string;
-}
+import type { BookCart, Category } from "../../types/bookType";
 
 const categories: Category[] = [
   {
