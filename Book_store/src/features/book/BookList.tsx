@@ -4,17 +4,9 @@ import { addToCart } from "../../store/slices/cartSlice";
 import useFetch from "../../hooks/useFetch";
 import { motion } from "framer-motion";
 import NavBar from "../../components/common/NavBar";
-import Footer from "../../components/common/Footer";
 import { useNavigate } from "react-router";
+import type { BookCart } from "../../types/bookType";
 
-interface Book {
-  title: string;
-  subtitle: string;
-  isbn13: string;
-  price: string;
-  image: string;
-  url: string;
-}
 
 interface Category {
   name: string;
@@ -105,7 +97,7 @@ const BookList: React.FC = () => {
   const resetFilters = () => {
     setSelectedCategory("All");
     setQuery("programming");
-    setPrice(999.99);
+    setPrice(10000);
   };
 
   const filteredBooks = books.filter((book) => {
@@ -122,7 +114,7 @@ const BookList: React.FC = () => {
 
     return categoryMatch && priceInINR <= price;
   });
-  const handleAddToCart = (book: Book) => {
+  const handleAddToCart = (book: BookCart) => {
     dispatch(
       addToCart({
         id: book.isbn13,

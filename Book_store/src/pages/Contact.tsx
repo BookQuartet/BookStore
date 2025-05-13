@@ -1,4 +1,3 @@
-import Footer from "../components/common/Footer";
 import NavBar from "../components/common/NavBar";
 import Book from "../assets/Book.jpg";
 const Contact = () => {
@@ -17,11 +16,11 @@ const Contact = () => {
             <img
               src={Book}
               alt="Book illustration"
-              className="w-64 animate-pulse"
+              className="w-[600px] animate-pulse rounded-3xl"
             />
           </div>
 
-          <div className="md:w-1/2 p-10 flex flex-col justify-center bg-white">
+          <div className="md:w-1/2 p-10 flex flex-col  justify-center bg-white">
             <h2 className="text-3xl font-semibold mb-6 text-center text-brown-800 ">
               Contact Us
             </h2>
@@ -66,7 +65,6 @@ const Contact = () => {
           </div>
         </div>
       </div>
-      <Footer />
     </>
   );
 };

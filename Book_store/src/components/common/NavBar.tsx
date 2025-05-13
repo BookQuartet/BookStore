@@ -78,7 +78,7 @@ const NavBar = () => {
             <span className="text-bold text-white">Cart</span>
             <button
               type="button"
-              className="relative rounded-full bg-gray-800 p-3 text-gray-400 hover:text-white focus:ring-2 focus:ring-white"
+              className="relative rounded-full  p-3 text-gray-400 hover:text-white "
             >
               <FaShoppingCart className="text-white relative mt-2 mr-3" />
               {cartLength > 0 && (

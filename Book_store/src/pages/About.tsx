@@ -71,7 +71,6 @@ export default function About() {
           →
         </button>
       </div>
-      <Footer/>
     </>
   );
 }

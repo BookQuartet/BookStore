@@ -26,14 +26,14 @@ const HomeSlidding = () => {
 
     return (
         <div>
-            <div className="relative w-full mt-3 overflow-hidden">
-                <div className="overflow-hidden rounded-[40px] w-full max-w-7xl mx-auto">
+            <div className="relative w-[100%] mt-2 overflow-hidden">
+                <div className="overflow-hidden rounded-[10px] w-full max-w-9xl mx-auto">
 
                     <img
                         key={current}
                         src={images[current]}
                         alt={`Book ${current + 1}`}
-                        className="w-full h-[500px] object-cover opacity-0 animate-fadeIn rounded-[40px]"
+                        className="w-[100%] h-[600px] object-cover opacity-0 animate-fadeIn rounded-[10px]"
                     />
 
                 </div>

@@ -8,10 +8,10 @@ import {
   removeFromCart,
 } from "../../store/slices/cartSlice";
 import NavBar from "../../components/common/NavBar";
-import Footer from "../../components/common/Footer";
 import { useState } from "react";
 import { toast } from "react-toastify";
 import confetti from "canvas-confetti";
+
 type PromoCode = {
   type: "percentage" | "fixed";
   value: number;
@@ -26,31 +26,33 @@ const Cart = () => {
   const dispatch = useDispatch();
   const cartItem = useSelector((state: RootState) => state.cart.items);
   const cartLength = cartItem.length;
+
   const cartTotal: number = cartItem.reduce(
     (acc, item) =>
       acc + Number(item.price.replace(/[^\d.]/g, "")) * item.quantity,
     0
   );
-  const discountAmount = discount;
-  const decreaseCartQuantity = (item: any) => {
-    dispatch(decreaseQuantity(item));
-  };
-  const increaseCartQuantity = (item: any) => {
-    console.log(item);
-    dispatch(increaseQuantity(item));
-  };
+
   const conversionRate = 83;
+  const subTotal = Number((cartTotal * conversionRate).toFixed(2));
+  const isFreeDelivery = subTotal > 5000;
+  const deliveryCharge = isFreeDelivery ? 0 : 50;
+  const discountAmount = Number(Math.round(discount).toFixed(2));
+  const totalAmount = Math.round(subTotal + deliveryCharge - discount).toFixed(
+    2
+  );
+
   const validPromoCodes: Record<string, PromoCode> = {
     SAVE10: { type: "percentage", value: 10 },
     FLAT100: { type: "fixed", value: 100 },
   };
+
   const handleApplyPromo = () => {
     const code = promoCode.toUpperCase();
     if (validPromoCodes[code]) {
       const { type, value } = validPromoCodes[code];
-
       if (type === "percentage") {
-        const discountAmount = (cartTotal * conversionRate * value) / 100;
+        const discountAmount = (subTotal * value) / 100;
         setDiscount(discountAmount);
       } else if (type === "fixed") {
         setDiscount(value);
@@ -67,7 +69,15 @@ const Cart = () => {
       toast.error("Invalid promo code ❌");
     }
   };
-  console.log("discount", discount);
+
+  const decreaseCartQuantity = (item: string) => {
+    dispatch(decreaseQuantity(item));
+  };
+
+  const increaseCartQuantity = (item: string) => {
+    dispatch(increaseQuantity(item));
+  };
+
   return (
     <>
       <NavBar />
@@ -147,21 +157,15 @@ const Cart = () => {
                 <input
                   type="text"
                   value={promoCode}
-                  onChange={(e) => {
-                    setPromoCode(e.target.value);
-                  }}
+                  onChange={(e) => setPromoCode(e.target.value)}
                   placeholder="Enter code"
                   className="w-full p-3 rounded-lg border border-teal-300 focus:outline-none"
                 />
-                <span>
-                  {isPromoClicked ? (
-                    <span className="text-green-400 text-sm m-2">
-                      Promo Code Applied Successfully ❤️‍🔥
-                    </span>
-                  ) : (
-                    ""
-                  )}
-                </span>
+                {isPromoClicked && (
+                  <span className="text-green-400 text-sm m-2">
+                    Promo Code Applied Successfully ❤️‍🔥
+                  </span>
+                )}
                 <button
                   onClick={handleApplyPromo}
                   className="mt-4 w-full bg-teal-500 text-white py-2 rounded-lg hover:bg-teal-600 transition"
@@ -177,26 +181,31 @@ const Cart = () => {
                 <div className="space-y-2 text-teal-800">
                   <div className="flex justify-between">
                     <span>Subtotal</span>
-                    <span>
-                      ₹{Math.round(cartTotal * conversionRate).toFixed(2)}
-                    </span>
+                    <span>₹{subTotal.toFixed(2)}</span>
                   </div>
                   <div className="flex justify-between">
                     <span>Shipping</span>
-                    <span>₹50.00</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>Promo Code</span>
-                    <span> ₹{Math.round(discount).toFixed(2)}</span>
-                  </div>
-                  <div className="flex justify-between font-bold text-lg mt-2">
-                    <span>Total</span>
-                    <span>
-                      ₹
-                      {Math.round(
-                        cartTotal * conversionRate + 50 - discountAmount
-                      ).toFixed(2)}
+                    <span
+                      className={`${
+                        isFreeDelivery ? "line-through text-gray-400" : ""
+                      }`}
+                    >
+                      ₹50.00
                     </span>
+                  </div>
+                  {isFreeDelivery && (
+                    <div className="flex justify-between text-green-600 font-medium">
+                      <span></span>
+                      <span>Free Delivery 🎉</span>
+                    </div>
+                  )}
+                  <div className="flex justify-between">
+                    <span>Discount</span>
+                    <span> - ₹{discountAmount}</span>
+                  </div>
+                  <div className="flex justify-between text-lg mt-2">
+                    <span className="font-bold">Total Amount</span>
+                    <span>₹{totalAmount}</span>
                   </div>
                 </div>
                 <button
@@ -208,6 +217,20 @@ const Cart = () => {
                 >
                   Proceed to Checkout
                 </button>
+                {isPromoClicked && (
+                  <div className="flex mt-4 justify-center bg-green-200 rounded-xl">
+                    <img
+                      className="w-5 h-5 m-1"
+                      src="https://img.icons8.com/ios/50/discount--v1.png"
+                      alt=""
+                    />
+                    <span>
+                      You'll save ₹
+                      {Math.round(discount + deliveryCharge).toFixed(2)} on this
+                      order!
+                    </span>
+                  </div>
+                )}
               </div>
             </div>
           ) : (

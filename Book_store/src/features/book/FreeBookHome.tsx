@@ -31,7 +31,7 @@ export default function FreeBookHome() {
       
       <NavBar/>
 
-        <div className='px-8  mt-24'>
+        <div className='px-2  mt-24'>
         <HomeSlidding />
         </div>
       <h1 className='text-xl font-bold font-serif bg-gray-500 text-white rounded-lg px-2 shadow-lg my-[30px] text-center'>Free Books - Choose Any You Like !! and Enjoy</h1>

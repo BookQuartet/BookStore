@@ -10,7 +10,6 @@ const Login: React.FC = () => {
   const [password, setPassword] = useState<string>("");
   const [showModal, setShowModal] = useState<boolean>(false);
   const [storedUsername, setStoredUsername] = useState<string>("");
-
   const navigate = useNavigate();
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -35,7 +34,7 @@ const Login: React.FC = () => {
   }, [location]);
 
   return (
-    <div  
+    <div
       className="relative min-h-screen bg-cover bg-center bg-no-repeat flex items-center justify-center"
       style={{ backgroundImage: `url(${bgBook})` }}
     >

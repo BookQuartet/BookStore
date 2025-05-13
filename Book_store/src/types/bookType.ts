@@ -35,3 +35,13 @@ export interface Book {
     url: string,
     year: string,
   }
+
+
+  export interface BookCart {
+    title: string;
+    subtitle: string;
+    isbn13: string;
+    price: string;
+    image: string;
+    url: string;
+  }
