@@ -137,7 +137,7 @@ const BookList: React.FC = () => {
   return (
     <>
       <NavBar />
-      <div className="flex p-6 mt-[60px]">
+      <div className="flex p-6 mt-[60px] bg-gradient-to-br from-gray-300 via-gray-100 to-gray-100">
         <div className="w-60 mr-8">
           <h3 className="text-lg font-semibold mb-4">Filter By Category</h3>
           <div className="border-t border-gray-300 pt-4">
