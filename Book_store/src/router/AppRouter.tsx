@@ -8,11 +8,11 @@ import Register from "../components/login/Register";
 import BookDetails from "../features/book/BookDetails";
 import FreeBookHome from "../features/book/FreeBookHome";
 import Footer from "../components/common/Footer";
+import NotFound from "../pages/NotFound";
 const AppRouter = () => {
   return (
     <div>
       <BrowserRouter>
-      
         <Routes>
           <Route path="/" element={<Login />} />
           <Route path="/about" element={<About />} />
@@ -20,10 +20,11 @@ const AppRouter = () => {
           <Route path="/register" element={<Register />} />
           <Route path="/cartItem" element={<Cart />} />
           <Route path="/booklist" element={<BookList />} />
-          <Route path="/book-details/:isbn13" element={<BookDetails/>}/>
-          <Route path="/home" element={<FreeBookHome/>}/>
+          <Route path="/book-details/:isbn13" element={<BookDetails />} />
+          <Route path="/home" element={<FreeBookHome />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
-        <Footer/>
+        <Footer />
       </BrowserRouter>
     </div>
   );
