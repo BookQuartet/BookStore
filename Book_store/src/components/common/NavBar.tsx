@@ -4,6 +4,8 @@ import { IoIosCall } from "react-icons/io";
 import { useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router";
 import type { RootState } from "../../store/store";
+import { onAuthStateChanged, signOut } from "firebase/auth";
+import { auth } from "../../auth/firebaseConfig";
 
 const NavBar = () => {
   const navigate = useNavigate();
@@ -15,24 +17,32 @@ const NavBar = () => {
   const [showDropdown, setShowDropdown] = useState<boolean>(false);
 
   useEffect(() => {
-    const email = localStorage.getItem("userEmail");
-    const name = localStorage.getItem("username");
-    setUserEmail(email);
-    setUserName(name);
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setUserEmail(user.email);
+        setUserName(user.displayName ?? "User");
+      } else {
+        setUserEmail(null);
+        setUserName(null);
+      }
+    });
+
+    return () => unsubscribe();
   }, []);
 
-  const handleLogout = () => {
-    localStorage.removeItem('username')
-    localStorage.removeItem('userEmail')
-    localStorage.removeItem('password')
-    setUserEmail(null);
-    setUserName(null);
-    setShowDropdown(false);
-    navigate("/");
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      setShowDropdown(false);
+      navigate("/");
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
   };
 
-  const getFirstLetter = (email: string) => {
-    return email?.charAt(0).toUpperCase();
+  const getFirstLetter = (email: string | null | undefined) => {
+    if (!email) return "";
+    return email.charAt(0).toUpperCase();
   };
 
   return (
@@ -119,7 +129,7 @@ const NavBar = () => {
             )}
 
             {showDropdown && userEmail && (
-              <div className="absolute top-10 right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-50">
+              <div className="absolute top-10 right-0 mt-2 w-56 bg-white rounded-md shadow-lg z-50">
                 <div className="px-4 py-2 text-sm text-gray-700 border-b">
                   <span>
                     Welcome,{" "}

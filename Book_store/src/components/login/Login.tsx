@@ -1,37 +1,35 @@
-import React, { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import bookImage from "../../assets/bg2.webp";
 import bgBook from "../../assets/bg.jpg";
 import { toast } from "react-toastify";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../../auth/firebaseConfig";
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [showModal, setShowModal] = useState<boolean>(false);
-  const [storedUsername, setStoredUsername] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string>();
   const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const storedEmail = localStorage.getItem("userEmail");
-    const storedPassword = localStorage.getItem("userPassword");
-    if (email === storedEmail && password === storedPassword) {
-      localStorage.setItem("userEmail", email);
-      toast.success("Login Successfully ✅");
-      navigate("/home");
-    } else {
-      setShowModal(true);
+    setLoading(true);
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      setTimeout(() => {
+        setLoading(false);
+        toast.success("Logged in successfully");
+        navigate("/home");
+      }, 1000);
+    } catch (error: any) {
+      setLoading(false);
+      setError(error.message);
     }
   };
-  const location = useLocation();
-
-  useEffect(() => {
-    const savedUsername = localStorage.getItem("username");
-    if (savedUsername) {
-      setStoredUsername(savedUsername);
-    }
-  }, [location]);
 
   return (
     <div
@@ -68,38 +66,77 @@ const Login: React.FC = () => {
           <h2 className="text-white text-4xl font-bold text-center mb-8 drop-shadow">
             Welcome
           </h2>
-          {storedUsername && (
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div>
-                <label className="block text-white mb-2">Email</label>
-                <input
-                  type="email"
-                  placeholder="name@example.com"
-                  required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full px-4 py-3 rounded-lg bg-white/40 text-white placeholder-white focus:outline-none focus:ring-2 focus:ring-white"
-                />
-              </div>
-              <div>
-                <label className="block text-white mb-2">Password</label>
-                <input
-                  type="password"
-                  placeholder="*******"
-                  required
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="w-full px-4 py-3 rounded-lg bg-white/40 text-white placeholder-white focus:outline-none focus:ring-2 focus:ring-white"
-                />
-              </div>
-              <button
-                type="submit"
-                className="w-full bg-black/80 text-white font-semibold py-3 rounded-lg hover:bg-black/60 transition"
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div>
+              <label className="block text-white mb-2">Email</label>
+              <input
+                type="email"
+                placeholder="name@example.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full px-4 py-3 rounded-lg bg-white/40 text-white placeholder-white focus:outline-none focus:ring-2 focus:ring-white"
+              />
+            </div>
+            <div>
+              <label className="block text-white mb-2">Password</label>
+              <input
+                type="password"
+                placeholder="*******"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full px-4 py-3 rounded-lg bg-white/40 text-white placeholder-white focus:outline-none focus:ring-2 focus:ring-white"
+              />
+            </div>
+            {error && (
+              <motion.div
+                className="text-red-500 text-center font-bold text-xl mt-2"
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ type: "spring", stiffness: 300 }}
               >
-                Login
-              </button>
-            </form>
-          )}
+                <p>{error.replace("Firebase: ", "").replace("auth/", "")}</p>
+              </motion.div>
+            )}
+
+            <button
+              type="submit"
+              disabled={loading}
+              className={`w-full py-3 rounded-lg text-white font-semibold transition ${
+                loading
+                  ? "bg-gray-600 cursor-not-allowed"
+                  : "bg-black/80 hover:bg-black/60"
+              }`}
+            >
+              {loading ? (
+                <span className="flex items-center justify-center">
+                  <svg
+                    className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    ></circle>
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+                    ></path>
+                  </svg>
+                  Please Wait...
+                </span>
+              ) : (
+                "Login"
+              )}
+            </button>
+          </form>
+
           <p className="text-white text-sm text-center mt-4">
             Don't have an account?{" "}
             <a href="/register" className="underline hover:text-gray-200">

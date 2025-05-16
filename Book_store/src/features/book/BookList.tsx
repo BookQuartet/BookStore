@@ -182,13 +182,13 @@ const BookList: React.FC = () => {
           </div>
         </div>
 
-        <main>
+        <main className="flex-1">
           <motion.div
             layout
-            className="flex justify-between flex-wrap items-center gap-4"
+            className="grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))] gap-6 justify-center"
           >
             {query.trim() === "" ? (
-              <p className="text-gray-600 text-lg text-center w-full mt-10">
+              <p className="text-gray-600 text-lg text-center col-span-full mt-10">
                 Please enter a search keyword to display books.
               </p>
             ) : isLoading ? (
@@ -196,7 +196,7 @@ const BookList: React.FC = () => {
                 <SkeletonBookCard key={i} />
               ))
             ) : filteredBooks.length === 0 ? (
-              <p className="text-gray-600 text-lg text-center w-full mt-10">
+              <p className="text-gray-600 text-lg text-center col-span-full mt-10">
                 No books found for the selected filters.
               </p>
             ) : (
@@ -205,12 +205,13 @@ const BookList: React.FC = () => {
                   key={book.isbn13}
                   layout
                   layoutId={book.isbn13}
-                  className="w-[200px] justify-center shadow-2xl rounded p-3 m-2 flex flex-col items-center bg-white"
+                  className="shadow-2xl rounded-xl p-3 m-2 flex flex-col items-center justify-between bg-gradient-to-br from-blue-50 via-purple-100 to-white"
                   whileHover={{ scale: 1.03 }}
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.9 }}
                   transition={{ duration: 0.3, type: "spring", stiffness: 100 }}
+                  style={{ width: "200px" }}
                 >
                   <img
                     src={book.image}
@@ -226,7 +227,7 @@ const BookList: React.FC = () => {
                   <p className="text-sm font-bold">
                     {convertToINR(book.price)}
                   </p>
-                  <div className="flex gap-3 mt-2">
+                  <div className="flex gap-3 mt-3">
                     <button
                       onClick={() => handleAddToCart(book)}
                       className="bg-blue-500 text-white px-2 py-1 rounded text-sm"

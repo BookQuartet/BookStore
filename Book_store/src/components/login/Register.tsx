@@ -3,24 +3,33 @@ import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import bgBook from "../../assets/bg.jpg";
 import { toast } from "react-toastify";
+import { auth } from "../../auth/firebaseConfig";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 const Register: React.FC = () => {
   const [username, setUsername] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
   const [showModal, setShowModal] = useState<boolean>(false);
+  const [error, setError] = useState<string>();
   const navigate = useNavigate();
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (password !== confirmPassword) {
-      setShowModal(true);
-      return;
+    // if (password !== confirmPassword)
+    //   return toast.error("Passwords do not match");
+
+    try {
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      await updateProfile(userCredential.user, { displayName: username });
+      toast.success("Registered successfully");
+      navigate("/");
+    } catch (error: any) {
+      setError(error.message);
     }
-    localStorage.setItem("username", username);
-    localStorage.setItem("userEmail", email);
-    localStorage.setItem("userPassword", password);
-    toast.success("Successfully Registered");
-    navigate("/");
   };
   return (
     <div
@@ -49,8 +58,8 @@ const Register: React.FC = () => {
             <input
               type="text"
               placeholder="Name"
-              required
               value={username}
+              required
               onChange={(e) => setUsername(e.target.value)}
               className="w-full px-4 py-3 rounded-lg bg-white/40 text-white placeholder-white focus:outline-none focus:ring-2 focus:ring-white"
             />
@@ -60,7 +69,6 @@ const Register: React.FC = () => {
             <input
               type="email"
               placeholder="Example:Name@gmail.com"
-              required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="w-full px-4 py-3 rounded-lg bg-white/40 text-white placeholder-white focus:outline-none focus:ring-2 focus:ring-white"
@@ -71,7 +79,6 @@ const Register: React.FC = () => {
             <input
               type="password"
               placeholder="*********"
-              required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="w-full px-4 py-3 rounded-lg bg-white/40 text-white placeholder-white focus:outline-none focus:ring-2 focus:ring-white"
@@ -82,12 +89,21 @@ const Register: React.FC = () => {
             <input
               type="password"
               placeholder="*********"
-              required
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               className="w-full px-4 py-3 rounded-lg bg-white/40 text-white placeholder-white focus:outline-none focus:ring-2 focus:ring-white"
             />
           </div>
+          {error && (
+            <motion.div
+              className="text-red-500 text-center font-bold text-xl mt-2"
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ type: "spring", stiffness: 300 }}
+            >
+              <p>{error.replace("Firebase: ", "").replace("auth/", "")}</p>
+            </motion.div>
+          )}
           <button
             type="submit"
             className="w-full bg-black/80 text-white font-semibold py-3 rounded-lg hover:bg-black/60 transition"
