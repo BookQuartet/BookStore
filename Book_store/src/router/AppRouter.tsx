@@ -9,10 +9,12 @@ import BookDetails from "../features/book/BookDetails";
 import FreeBookHome from "../features/book/FreeBookHome";
 import Footer from "../components/common/Footer";
 import NotFound from "../pages/NotFound";
+import ScrollToTop from "../components/common/ScrollToTop";
 const AppRouter = () => {
   return (
     <div>
       <BrowserRouter>
+      <ScrollToTop/>
         <Routes>
           <Route path="/" element={<Login />} />
           <Route path="/about" element={<About />} />

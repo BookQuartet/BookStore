@@ -22,6 +22,9 @@ const NavBar = () => {
   }, []);
 
   const handleLogout = () => {
+    localStorage.removeItem('username')
+    localStorage.removeItem('userEmail')
+    localStorage.removeItem('password')
     setUserEmail(null);
     setUserName(null);
     setShowDropdown(false);

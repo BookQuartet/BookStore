@@ -31,8 +31,6 @@ export default function BookDetails() {
     fetchData();
   }, [isbn13]);
 
-  console.log("data", data);
-
   return (
     <div className="min-h-screen flex justify-center items-center mt-10">
       <NavBar />

@@ -29,7 +29,6 @@ const cartSlice = createSlice({
       const exists = state.items.find(item => item.id === action.payload.id);
       if (exists) {
         toast.error('Item already exists in this Cart ❌')
-        exists.quantity += 1;
       } else {
         toast.success('Item Added to Cart ✅')
 

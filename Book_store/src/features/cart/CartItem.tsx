@@ -11,11 +11,7 @@ import NavBar from "../../components/common/NavBar";
 import { useState } from "react";
 import { toast } from "react-toastify";
 import confetti from "canvas-confetti";
-
-type PromoCode = {
-  type: "percentage" | "fixed";
-  value: number;
-};
+import type { PromoCode } from "../../types/bookType";
 
 const Cart = () => {
   const [isOrdered, setIsOrdered] = useState<boolean>(false);
@@ -45,6 +41,7 @@ const Cart = () => {
   const validPromoCodes: Record<string, PromoCode> = {
     SAVE10: { type: "percentage", value: 10 },
     FLAT100: { type: "fixed", value: 100 },
+    SAVE50: { type: "percentage", value: 50 },
   };
 
   const handleApplyPromo = () => {
@@ -93,7 +90,7 @@ const Cart = () => {
               const dollarPrice = Number(
                 item.price.toString().replace(/[^\d.]/g, "")
               );
-              const rupeePrice = dollarPrice * conversionRate * item.quantity;
+              const rupeePrice = dollarPrice * conversionRate;
 
               return (
                 <div
@@ -180,7 +177,7 @@ const Cart = () => {
                 </h3>
                 <div className="space-y-2 text-teal-800">
                   <div className="flex justify-between">
-                    <span>Subtotal</span>
+                    <span>Subtotal ({cartLength} item)</span>
                     <span>₹{subTotal.toFixed(2)}</span>
                   </div>
                   <div className="flex justify-between">
@@ -201,7 +198,7 @@ const Cart = () => {
                   )}
                   <div className="flex justify-between">
                     <span>Discount</span>
-                    <span> - ₹{discountAmount}</span>
+                    <span className="text-green-500"> - ₹{discountAmount}</span>
                   </div>
                   <div className="flex justify-between text-lg mt-2">
                     <span className="font-bold">Total Amount</span>

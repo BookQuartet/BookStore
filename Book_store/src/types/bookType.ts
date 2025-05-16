@@ -50,3 +50,7 @@ export interface Book {
   keyword: string;
   icon: string;
   }
+  export type PromoCode ={
+     type: "percentage" | "fixed";
+  value: number;
+  }
